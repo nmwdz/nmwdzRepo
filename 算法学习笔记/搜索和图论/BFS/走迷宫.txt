@@ -1,0 +1,56 @@
+#include<iostream>
+#include<cstring>//memset函数头文件
+#include<queue>//使用队列用到的头文件
+
+using namespace std;
+
+typedef pair<int,int> PII;
+
+const int N = 110;
+
+int n,m;
+int g[N][N];//记录地图信息
+int d[N][N];//记录每个点到源点的数值，由于每步的权重是1，既为所走的步数
+
+int bfs()
+{
+    queue<PII> q;//定义一个坐标队列
+    q.push({0,0});//源点入列
+
+    memset(d,-1,sizeof d);//初始化每个点到源点的距离为-1
+    d[0][0]=0;//定义源点到自己的距离为0
+
+    int dx[4]={0,1,0,-1},dy[4]={1,0,-1,0};//定义四个方向的坐标拓展数组（上右下左）
+
+    while(!q.empty())
+    {
+        //取出队头元素
+        auto t=q.front();
+        q.pop();
+        //分别向四个方向拓展
+        for(int i=0;i<4;i++)
+        {
+            int x=t.first+dx[i],y=t.second+dy[i];
+            //如果（x,y）没有越界且不为墙且没有走过：
+            //1.记录此点到源点的距离
+            //2.此点入队
+            if(x>=0&&x<n&&y>=0&&y<m&&g[x][y]==0&&d[x][y]==-1)
+            {
+                d[x][y]=d[t.first][t.second]+1;
+                q.push({x,y});
+            }
+        }
+    }
+    return d[n-1][m-1];
+}
+
+int main()
+{
+    cin>>n>>m;
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < m; j ++)
+            cin >> g[i][j];
+
+    cout << bfs() << endl;
+    return 0;
+}
